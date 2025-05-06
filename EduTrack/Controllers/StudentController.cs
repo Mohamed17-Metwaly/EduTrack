@@ -1,4 +1,5 @@
 ﻿using EduTrack.DataAccess;
+using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,27 +12,73 @@ namespace EduTrack.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly StudentRepository _studentRepository;
-        public StudentController(StudentRepository repo)
+        private readonly IStudentRepository _studentRepository;
+        public StudentController(IStudentRepository repo)
         {
             _studentRepository = repo;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetStudents()
         {
-            var students = await _studentRepository.GetAllAsync();
-            if (students == null)
-                return BadRequest();
-            APIResponse response = new APIResponse
+            try
             {
-                Status = "Success",
-                IsSuccess = true,
-                Data = students
-            };
-
-            return Ok(response);
+                var students = await _studentRepository.GetAllAsync();
+                if (students == null)
+                    return NotFound();
+                APIResponse response = new APIResponse
+                {
+                    Status = "Success",
+                    IsSuccess = true,
+                    Data = students
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                APIResponse response = new APIResponse
+                {
+                    Status = "Error",
+                    IsSuccess = false,
+                    ErrorMessages = new List<string> { ex.Message }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetStudentById(int id)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest();
+                var student = await _studentRepository.GetByIdAsync(id);
+                if (student == null)
+                    return NotFound("Student not found");
+                APIResponse response = new APIResponse
+                {
+                    Status = "Success",
+                    IsSuccess = false,
+                    Data = student
+                };
+                return Ok(response);
+            }
+            catch(Exception ex) 
+            {
+                APIResponse response = new APIResponse
+                {
+                    Status = "Error",
+                    IsSuccess = false,
+                    ErrorMessages = new List<string> { ex.Message }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
