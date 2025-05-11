@@ -1,9 +1,9 @@
-﻿using EduTrack.DataAccess;
 using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using EduTrack.DataAccess;
 
 namespace EduTrack.Controllers
 {

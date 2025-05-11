@@ -1,4 +1,4 @@
-﻿using EduTrack.DataAccess;
+using EduTrack.DataAccess;
 using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +10,7 @@ namespace EduTrack.Controllers
     [ApiController]
     public class EnrollmentController : ControllerBase
     {
+
         private readonly IEnrollmentRepository _enrollmentRepository;
         public EnrollmentController(IEnrollmentRepository repo)
         {

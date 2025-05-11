@@ -1,4 +1,3 @@
-﻿using EduTrack.DataAccess;
 using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
 using EduTrack.Models.DTO;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Azure.Core.HttpHeader;
+using EduTrack.DataAccess;
 
 namespace EduTrack.Controllers
 {
@@ -70,7 +70,7 @@ namespace EduTrack.Controllers
                 };
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch(Exception ex) 
             {
                 APIResponse response = new APIResponse
                 {
