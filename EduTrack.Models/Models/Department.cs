@@ -11,7 +11,7 @@ namespace EduTrack.Models
         //// Navigation property
         //public Faculty Faculty { get; set; }
         // Collection of courses in the department
-        List<Course> Courses { get; set; } = new List<Course>();
-        List<Student> Students { get; set; } = new List<Student>();
+       public  List<Course> Courses { get; set; } = new List<Course>();
+       public  List<Student> Students { get; set; } = new List<Student>();
     }
 }

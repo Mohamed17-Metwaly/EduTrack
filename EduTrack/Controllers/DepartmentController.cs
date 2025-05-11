@@ -1,7 +1,7 @@
-using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using EduTrack.DataAccess.Repository.Interfaces;
 
 namespace EduTrack.Controllers
 {

@@ -17,7 +17,7 @@ namespace EduTrack.Models
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
-        List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
 
     }
