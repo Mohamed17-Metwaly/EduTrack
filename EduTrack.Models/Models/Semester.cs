@@ -9,6 +9,6 @@ namespace EduTrack.Models
         public string SemesterName { get; set; } // e.g., "Fall 2023"
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

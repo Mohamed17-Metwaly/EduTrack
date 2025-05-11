@@ -1,6 +1,7 @@
 ﻿using EduTrack.DataAccess;
 using EduTrack.DataAccess.Repository.Interfaces;
 using EduTrack.Models;
+using EduTrack.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +70,7 @@ namespace EduTrack.Controllers
                 };
                 return Ok(response);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 APIResponse response = new APIResponse
                 {
@@ -112,13 +113,90 @@ namespace EduTrack.Controllers
         {
             if (id == 0)
                 return BadRequest();
-            if(id<0)
+            if (id < 0)
                 return BadRequest();
             var student = await _studentRepository.GetByIdAsync(id);
             if (student == null)
                 return NotFound("Student not found");
             await _studentRepository.DeleteAsync(id);
             return Ok("Student deleted successfully");
+        }
+        [HttpGet("course")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetStudentCourse(int id)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest("Student ID cannot be zero");
+                if (id < 0)
+                    return BadRequest("Student ID cannot be negative");
+                var course = await _studentRepository.GetCoursesAsync(id);
+                if (course == null || course.Count == 0)
+                    return NotFound("No courses found for this student");
+                APIResponse response = new APIResponse
+                {
+                    Status = "Success",
+                    IsSuccess = true,
+                    Data = course
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                APIResponse response = new APIResponse
+                {
+                    Status = "Error",
+                    IsSuccess = false,
+                    ErrorMessages = new List<string> { ex.Message }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+
+        }
+        [HttpGet("AvailableCourse")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAvailableCourses(int id)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest("Student ID cannot be zero");
+                if (id < 0)
+                    return BadRequest("Student ID cannot be negative");
+                var course = await _studentRepository.GetAvailableCourses(id);
+                if (course == null || course.Count == 0)
+                    return NotFound("No courses found for this student");
+                APIResponse response = new APIResponse
+                {
+                    Status = "Success",
+                    IsSuccess = true,
+                    Data = course
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                APIResponse response = new APIResponse
+                {
+                    Status = "Error",
+                    IsSuccess = false,
+                    ErrorMessages = new List<string> { ex.Message }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+        [HttpPost("courseRegistration")]
+        public async Task<IActionResult> Registration([FromBody] CourseRegistrationDTO courseRegistrationDTO)
+        {
+            await _studentRepository.CourseRegistration(courseRegistrationDTO);
+            return Ok("done");
         }
     }
 }
